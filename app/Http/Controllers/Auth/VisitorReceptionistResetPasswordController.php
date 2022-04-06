@@ -12,7 +12,12 @@ class VisitorReceptionistResetPasswordController extends Controller
 {
     use ResetsPasswords;
 
-    protected $redirectTo = '/dashboard';
+    public function __construct()
+    {
+        $this->middleware('guest:system_admin');
+    }
+
+    protected $redirectTo = '/receptionists-dashboard';
 
     public function showResetForm(Request $request, $token = null)
     {

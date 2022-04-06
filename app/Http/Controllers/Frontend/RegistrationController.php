@@ -50,11 +50,6 @@ class RegistrationController extends Controller
                         $visitor_register->address = 'Null';
                  }
 
-                 //  if(!empty($request->input('email'))) {
-                 //        $visitor_register->email = $request->email;
-                 //    } else {
-                 //        $visitor_register->email = 'Null';
-                 // }
                  // file upload
                     if ($request->hasFile('image')){
                         $photo = $request->file('image');

@@ -14,7 +14,7 @@ class OfficialController extends Controller
 {
     public function officiallist(Request $request){
         //$query = "select * from employee";
-        $query = "select branch.*,employee.employee_id as employee_id, employee.first_name as firstName,employee.last_name as lName,employee.phone as ephn,employee.email as eemail from branch Inner join employee on branch.branch_id=employee.branch_id where employee.employee_id in (40,52,66,67,68,69,70,71,72,73,77,79)";
+        $query = "select branch.*,employee.employee_id as employee_id, employee.first_name as firstName,employee.last_name as lName,employee.phone as ephn,employee.email as eemail,employee.photo as employee_photo from branch Inner join employee on branch.branch_id=employee.branch_id where employee.employee_id in (40,52,66,67,68,69,70,71,72,73,77,79)";
         //dd($query);
         $data['branchs'] =Branch::orderBy('branch_name','DESC')->get();
         //dd($data['branch']);
@@ -47,7 +47,13 @@ class OfficialController extends Controller
     }
 
     public function createAppointment($employee_id){
-       $employee=DB::table('employee')->where('employee_id',$employee_id)->first();
+        $employee=DB::table('employee')
+            ->leftJoin('branch', 'employee.branch_id', '=', 'branch.branch_id')
+            ->select('employee.*', 'branch.branch_name as branchName')
+            ->where('employee.employee_id',$employee_id)
+            ->first();
+       //$employee=DB::table('employee')->where('employee_id',$employee_id)->first();
+       //$branch=Branch::all();
        //dd($employee);
        return view('backend.official.create_appointment',compact('employee'));
     }
@@ -64,6 +70,7 @@ class OfficialController extends Controller
              $appointment=new Appointment;
              $appointment->visitor_id=$data['visitor_id'];
              $appointment->employee_id=$data['employee_id'];
+             $appointment->branch_id=$data['branch_id'];
              $appointment->date_time=$data['date_time'];
              $appointment->date_time=date("Y-m-d H:i:s",strtotime($data['date_time']));
              $appointment->purpose=$data['purpose'];

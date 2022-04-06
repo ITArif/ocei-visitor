@@ -3,6 +3,7 @@
 use App\Http\Controllers\Backend\OfficialController;
 use App\Http\Controllers\Backend\AppointmentController;
 use App\Http\Controllers\Backend\ReceptionistController;
+use App\Http\Controllers\Auth\VisitorReceptionistForgetPasswordController;
 use Illuminate\Support\Facades\Route;
 
 
@@ -57,6 +58,17 @@ Route::middleware('receptionist')->group(function(){
     Route::get('/receptionists-dashboard', 'Backend\HomeController@receptionistDashboard')->name('receptionist.dashboard');
     Route::get('/appointment/history', [ReceptionistController::class, 'appontmentHistoryData'])->name('appontmentHistoryData');
     Route::get('/archive/appointment', [ReceptionistController::class, 'archiveAppointmentData'])->name('archiveAppointmentData');
+
+    /////***********Walk Appointment*******************///////
+    Route::post('/walk/appointment',[ReceptionistController::class, 'walkAppointment'])->name('walkAppointment');
+    Route::get('/walkin/appointment/history', [ReceptionistController::class, 'walkInAppontmentHistoryData'])->name('walkInAppontmentHistoryData');
+    Route::post('/walkin/appointment/done', [ReceptionistController::class, 'doneWalkInAppointment']);
+    Route::post('/walkin/appointment/pending',[ReceptionistController::class, 'pendingWalkInAppointment']);
+    Route::get('/archive/walkin/appointment', [ReceptionistController::class, 'archiveWalkInAppointmentData'])->name('archiveWalkInAppointmentData');
+    /////////************Reports******************///////
+    Route::match(['get','post'],'/reports/appointment', [ReceptionistController::class,'appointmentReports'])->name('appointmentReports');
+    Route::match(['get','post'],'/reports/walkin/appointment', [ReceptionistController::class,'walkInAppointmentReports'])->name('walkInAppointmentReports');
+
     Route::group(['prefix' => 'receptionists'], function () {
       Route::match(['get','post'],'/appointment/list', [ReceptionistController::class,'checkAppointmentList'])->name('checkAppointmentList');
       Route::get('/create/appointment/{appointment_id}',[ReceptionistController::class, 'receptionistsCreateAppointment'])->name('showreReptionistsAppointment');
@@ -65,6 +77,7 @@ Route::middleware('receptionist')->group(function(){
       Route::post('/appointment/pending',[ReceptionistController::class, 'pendingAppointment']);
       //////********In receptionist Ongoing appointment done**********///
       //Route::get('/done/ongoing-appointment/{id}', [ReceptionistController::class, 'doneOngoingAppointment']);
+
     });
 });
 
@@ -76,15 +89,18 @@ Route::get('/registration','Frontend\RegistrationController@register')->name('re
 Route::post('/register','Frontend\RegistrationController@storeRegister')->name('store.register');
 Route::match(['get','post'],'/confirmEmail/{code}','Frontend\RegistrationController@confirmAccount')->name('confirm.account');
 
+
+//user profile
+Route::get('/user/profile','Backend\ProfileController@profile')->name('user.profile');
+Route::post('update/userProfile','Backend\ProfileController@updateProfile')->name('update.profile');
+Route::post('/update/user/password','Backend\ProfileController@updatePassword')
+    ->name('update.password');
+
+
 ///**********Visitor forgot password**********************************//
-Route::get('/forgot/password/','Auth\VisitorReceptionistForgetPasswordController@forgotPassword')->name('forgotPassword');
-//sendResetLinkEmail ai method ta ase trait a ForgotPasswordController er mordhee
-Route::post('/send/reset/link','Auth\VisitorReceptionistForgetPasswordController@sendResetLinkEmail')
-    ->name('send.reset.link');
-Route::get('/password/reset/{token}','Auth\VisitorReceptionistResetPasswordController@showResetForm')
-->name('password.reset');
-//override korbo na ata trait er mordhee ase----reset method a kintu post method ase Request
-Route::post('/password/reset','Auth\VisitorReceptionistResetPasswordController@reset')
-->name('password.request');
+Route::get('forget-password', [VisitorReceptionistForgetPasswordController::class, 'showForgetPasswordForm'])->name('forget.password.get');
+Route::post('forget-password', [VisitorReceptionistForgetPasswordController::class, 'submitForgetPasswordForm'])->name('forget.password.post'); 
+Route::get('reset-password/{token}', [VisitorReceptionistForgetPasswordController::class, 'showResetPasswordForm'])->name('reset.password.get');
+Route::post('reset-password', [VisitorReceptionistForgetPasswordController::class, 'submitResetPasswordForm'])->name('reset.password.post');
 
 

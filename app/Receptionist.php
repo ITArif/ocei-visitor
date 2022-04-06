@@ -8,5 +8,5 @@ class Receptionist extends Model
 {
     protected $table = 'receptionist_appointment';
 
-    protected $fillable = ['phone', 'approval_of', 'date_time', 'purpose', 'request_detail', 'appointment_id'];
+    protected $fillable = ['phone', 'approval_of', 'date_time', 'purpose', 'request_detail', 'appointment_id','branch_id'];
 }

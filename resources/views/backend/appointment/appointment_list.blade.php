@@ -47,7 +47,8 @@
                                     <option value="-1">----Select Status----</option>
                                     <option value="1" >Approved</option>
                                     <option value="3">Pending</option>
-                                    <option value="5">Done</option>
+                                    <option value="5">Appointment Completed</option>
+                                    <option value="">Reject</option>
                                   </select>
                                 </div>
                             </div>
@@ -126,7 +127,7 @@
                                 </td>
                             @elseif($aptmentData->approval_of==5)
                                 <td>
-                                    <button class="btn btn-sm btn-info btn-xs">Already Done</button>
+                                    <button class="btn btn-sm btn-info btn-xs">Appointment Completed</button>
                                 </td>
                             @else
                                 <td>

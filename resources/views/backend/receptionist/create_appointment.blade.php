@@ -64,6 +64,14 @@
                                   </div>
                               </div>
                             </div>
+                            <div class="col-6" hidden="">
+                              <div class="form-group">
+                                <label>Branch Id</label>
+                                  <div class="input-group date" data-target-input="nearest">
+                                      <input type="text" name="branch_id" readonly="" value="{{$appointments->branch_id}}" class="form-control" readonly="">
+                                  </div>
+                              </div>
+                            </div>
                             <div class="col-6">
                               <div class="form-group">
                                 <label>Date and time</label>

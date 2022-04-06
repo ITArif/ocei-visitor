@@ -42,8 +42,10 @@ class VisitorLoginController extends Controller
                 session([
                     'id' =>$auth->id,
                     'email' =>$auth->email,
+                    'phone' =>$auth->phone,
                     'name' =>$auth->name,
                     'role' =>$auth->role,
+                    'image' =>$auth->image,
                 ]);
                 if ($auth->role == 'visitor') {
                     if ($auth->status == 1) {

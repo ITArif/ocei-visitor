@@ -50,6 +50,15 @@
                                 </div>
                             </div>
                             <div class="col-6">
+                                <div class="form-group">
+                                  <label for="exampleInputFile">Official</label>
+                                  <select class="form-control select2bs4" name="branch_id" id="branch_id" style="width: 100%;">
+                                    <option value="">----Select Branch----</option>
+                                    <option value="{{$employee->branch_id}}" @if(!empty($employee->branch_id) && $employee->branch_id == $employee->branch_id) selected="" @endif>{{$employee->branchName}} <!-- [{{$employee->phone}}] --></option>
+                                  </select>
+                                </div>
+                            </div>
+                            <div class="col-6">
                               <div class="form-group">
                                 <label>Date and time <span style="color: red;" class="required">*</span></label>
                                   <div class="input-group date" id="reservationdatetime" data-target-input="nearest">

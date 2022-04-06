@@ -60,11 +60,71 @@
                     </a>
                 </li>
                 <li class="nav-item has-treeview">
-                    <a href="{{ route('archiveAppointmentData') }}"
-                        class="nav-link {{ request()->is('archive/appointment') ? 'active' : '' }}">
-                        <i class="fa fa-archive text-yellow" aria-hidden="true"></i>
+                    <a href="{{route('walkInAppontmentHistoryData')}}"
+                        class="nav-link {{ request()->is('walkin/appointment/history') ? 'active' : '' }}">
+                        <i class="nav-icon far fa-plus-square text-info"></i>
                         <p>
-                           Archived Appointments
+                            Walk In Appointments
+                        </p>
+                    </a>
+                </li>
+
+                <li class="nav-item has-treeview {{ request()->is('archive/*') ? ' menu-open' :''}}">
+                    <a href="#" class="nav-link {{ request()->is('archive/*') ? 'active' :''}}">
+                      <i class="fa fa-archive text-yellow" aria-hidden="true"></i>
+                      <p>
+                        Archived Appointments
+                        <i class="right fas fa-angle-left"></i>
+                      </p>
+                    </a>
+                    <ul class="nav nav-treeview">
+                      <li class="nav-item">
+                        <a href="{{ route('archiveAppointmentData')}}" class="nav-link {{ request()->is('archive/appointment') ? 'active' :''}}">
+                          <i class="far fa-circle nav-icon text-pink"></i>
+                          <p>All Archived Appointments</p>
+                        </a>
+                      </li>
+
+                      <li class="nav-item">
+                        <a href="{{route('archiveWalkInAppointmentData')}}" class="nav-link {{ request()->is('archive/walkin/appointment') ? 'active' :''}}">
+                          <i class="far fa-circle nav-icon text-pink"></i>
+                          <p>Walk In Appointments</p>
+                        </a>
+                      </li>
+                    </ul>
+                </li>
+
+                <li class="nav-item has-treeview {{ request()->is('reports/*') ? ' menu-open' :''}}">
+                    <a href="#" class="nav-link {{ request()->is('reports/*') ? 'active' :''}}">
+                      <i class="nav-icon fas fa-th text-success"></i>
+                      <p>
+                        Reports
+                        <i class="right fas fa-angle-left"></i>
+                      </p>
+                    </a>
+                    <ul class="nav nav-treeview">
+                      <li class="nav-item">
+                        <a href="{{ route('appointmentReports')}}" class="nav-link {{ request()->is('reports/appointment') ? 'active' :''}}">
+                          <i class="far fa-circle nav-icon text-pink"></i>
+                          <p>All Archived Appointments</p>
+                        </a>
+                      </li>
+
+                      <li class="nav-item">
+                        <a href="{{route('walkInAppointmentReports')}}" class="nav-link {{ request()->is('reports/walkin/appointment') ? 'active' :''}}">
+                          <i class="far fa-circle nav-icon text-pink"></i>
+                          <p>Walk In Appointments</p>
+                        </a>
+                      </li>
+                    </ul>
+                </li>
+
+                <li class="nav-item has-treeview">
+                    <a href="{{ url('user/profile') }}"
+                        class="nav-link {{ request()->is('user/profile') ? 'active' : '' }}">
+                        <i class="nav-icon fas fa-user text-orange pull-right"></i>
+                        <p>
+                            My Profile
                         </p>
                     </a>
                 </li>

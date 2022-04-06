@@ -1,8 +1,8 @@
 @extends('backend.master')
 
-@section('title', 'All Visitor Appointment History')
-@section('dashboard-title', 'All Visitor Appointment History')
-@section('breadcrumb-title', 'All Visitor Appointment  History')
+@section('title', 'All Visitor Walk In Appointment History')
+@section('dashboard-title', 'All Visitor Walk In Appointment History')
+@section('breadcrumb-title', 'All Visitor Walk In Appointment  History')
 
 @section('stylesheet')
     <!-- <link href="//cdn.datatables.net/1.10.19/css/jquery.dataTables.min.css" rel="stylesheet">
@@ -22,15 +22,16 @@
             </div>
             <!-- /.card-header -->
             <div class="card-body">
-              <table id="all-appointment-history" class="table table-bordered table-striped">
+              <table id="all-walkinappointment-history" class="table table-bordered table-striped">
                 <thead>
-                    <tr class="bg-success ">
+                    <tr class="bg-success">
                       <th>SL No</th>
                       <th>Id Card Number</th>
                       <th>Visitor Name & Phone</th>
-                      <th>Approval Of</th>
                       <th>Purpose</th>
-                      <th>Appointment Date & Time</th>
+                      <th>Employee Name</th>
+                      <th>Branch</th>
+                      <th>Appointment Date</th>
                       <th>Start Date & Time</th>
                       <th>End Date & Time</th>
                       <th>Status</th>
@@ -38,26 +39,27 @@
                   </thead>
                   <tbody>
                     <?php $i=1; ?>
-                   @foreach($appointmentHistory as $appointmentHistoryData)
+                   @foreach($walkInAppointmentHistory as $walkInAppointmentHistoryData)
                     <tr>
-                    <td><input type="checkbox" name="appointmentData_ids[]" value="{{$appointmentHistoryData->id}}"></td>
-                    <td>{{$appointmentHistoryData->id_card_number}}</td>
-                    <td><img style="border-radius: 50%;display: inline;width: 3.5rem;" class="table-avatar" src="{{asset('profile/images/'.$appointmentHistoryData->visitor_image)}}" alt="Avatar"><br>{{$appointmentHistoryData->visitorName}} <br>{{$appointmentHistoryData->visitorPhn}}</td>
-                    <td>{{$appointmentHistoryData->firstName}} {{$appointmentHistoryData->lName}}</td>
-                    <td>{{$appointmentHistoryData->purpose}}</td>
-                    <td>{{ date('j F Y g:i A', strtotime($appointmentHistoryData->date_time)) }}</td>
-                    <td>{{ date('j F Y g:i A', strtotime($appointmentHistoryData->created_at)) }}</td>
-                    @if ($appointmentHistoryData->status==5)
+                    <td><input type="checkbox" name="walkinappointmentData_ids[]" value="{{$walkInAppointmentHistoryData->id}}"></td>
+                    <td>{{$walkInAppointmentHistoryData->id_card_number}}</td>
+                    <td>{{$walkInAppointmentHistoryData->name}} <br>{{$walkInAppointmentHistoryData->contact_no}}</td>
+                    <td>{{$walkInAppointmentHistoryData->purpose}}</td>
+                    <td>{{$walkInAppointmentHistoryData->firstName}} {{$walkInAppointmentHistoryData->lName}}</td>
+                    <td>{{$walkInAppointmentHistoryData->branchName}}</td>
+                    <td>{{ date('j F Y', strtotime($walkInAppointmentHistoryData->date_time)) }}</td>
+                    <td>{{ date('j F Y g:i A', strtotime($walkInAppointmentHistoryData->created_at)) }}</td>
+                    @if ($walkInAppointmentHistoryData->status==5)
                     <td></td>
                     @else
-                    <td>{{ date('j F Y g:i A', strtotime($appointmentHistoryData->updated_at)) }}</td>
+                    <td>{{ date('j F Y g:i A', strtotime($walkInAppointmentHistoryData->updated_at)) }}</td>
                     @endif
 
-                      @if ($appointmentHistoryData->status==5)
+                      @if ($walkInAppointmentHistoryData->status==5)
                         <td>
                             <button class="btn btn-sm btn-success btn-xs">Ongoing</button>
                         </td>
-                      @elseif($appointmentHistoryData->status==1)
+                      @elseif($walkInAppointmentHistoryData->status==1)
                         <td>
                             <button class="btn btn-sm btn-warning btn-xs">Done</button>
                             <!-- <button class="btn btn-sm btn-warning btn-xs doneAppointment" id="{{$appointmentHistoryData->id}}">On Going</button> -->
@@ -81,7 +83,7 @@
 @section('custom_script')
 <script>
   $(document).ready(function() {
-    $('#all-appointment-history').DataTable( {
+    $('#all-walkinappointment-history').DataTable( {
         "info": true,
           "autoWidth": false,
           scrollX:'50vh',
@@ -94,11 +96,11 @@
   $('#done_all').click(function () {
       var ids = [];
       // get all selected user id
-      $.each($("input[name='appointmentData_ids[]']:checked"), function(){
+      $.each($("input[name='walkinappointmentData_ids[]']:checked"), function(){
           ids.push($(this).val());
       });
       if (ids.length!==0) {
-          var url = "{{ url('receptionists/appointment/done') }}";
+          var url = "{{ url('walkin/appointment/done') }}";
           Swal.fire({
               title: 'Are you sure?',
               text: "You want to done this appointment?",
@@ -112,7 +114,7 @@
                   $.ajax({
                       url: url,
                       type: 'POST',
-                      data: {"appointmentData_ids": ids, "_token": "{{ csrf_token() }}"},
+                      data: {"walkinappointmentData_ids": ids, "_token": "{{ csrf_token() }}"},
                       dataType: "json",
                       beforeSend:function () {
                           Swal.fire({
@@ -159,11 +161,11 @@
   $('#pending_all').click(function () {
       var ids = [];
       // get all selected user id
-      $.each($("input[name='appointmentData_ids[]']:checked"), function(){
+      $.each($("input[name='walkinappointmentData_ids[]']:checked"), function(){
           ids.push($(this).val());
       });
       if (ids.length!==0) {
-          var url = "{{ url('receptionists/appointment/pending') }}";
+          var url = "{{ url('walkin/appointment/pending') }}";
           Swal.fire({
               title: 'Are you sure?',
               text: "You want to Pending?",
@@ -177,7 +179,7 @@
                   $.ajax({
                       url: url,
                       type: 'POST',
-                      data: {"appointmentData_ids": ids, "_token": "{{ csrf_token() }}"},
+                      data: {"walkinappointmentData_ids": ids, "_token": "{{ csrf_token() }}"},
                       dataType: "json",
                       beforeSend:function () {
                           Swal.fire({
@@ -220,51 +222,51 @@
       }
   });
 
-  $(".doneAppointment").click(function () {
-      var id=$(this).attr('id');
-      //alert(id);
-      var url="{{url('receptionists/done/ongoing-appointment')}}";
-      $.ajax({
-          url:url+"/"+id,
-          type:"GET",
-          dataType:"json",
-          beforeSend:function () {
-              Swal.fire({
-                  title: 'Done the appointment data.....',
-                  html:"<i class='fa fa-spinner fa-spin' style='font-size: 24px;'></i>",
-                  confirmButtonColor: '#3085d6',
-                  allowOutSideClick:false,
-                  showCancelButton:false,
-                  showConfirmButton:false
-              });
-          },
-          success:function (response) {
-              Swal.close();
-              if(response==="success") {
-                  Swal.fire({
-                      title:'success',
-                      text: 'You Have Successfully Done Appointment',
-                      type:'success',
-                      confirmButtonText: 'OK'
-                  }).then(function(result){
-                      if (result.value) {
-                          window.location.reload();
-                      }
-                  });
-              }
-              //console.log(response)
-          },
-          error:function (error) {
-              Swal.fire({
-                  title: 'Error',
-                  text:'Something Went Wrong',
-                  type:'error',
-                  showConfirmButton: true
-              });
-              //console.log(error);
-          }
-      })
-    });
+  // $(".doneAppointment").click(function () {
+  //     var id=$(this).attr('id');
+  //     //alert(id);
+  //     var url="{{url('receptionists/done/ongoing-appointment')}}";
+  //     $.ajax({
+  //         url:url+"/"+id,
+  //         type:"GET",
+  //         dataType:"json",
+  //         beforeSend:function () {
+  //             Swal.fire({
+  //                 title: 'Done the appointment data.....',
+  //                 html:"<i class='fa fa-spinner fa-spin' style='font-size: 24px;'></i>",
+  //                 confirmButtonColor: '#3085d6',
+  //                 allowOutSideClick:false,
+  //                 showCancelButton:false,
+  //                 showConfirmButton:false
+  //             });
+  //         },
+  //         success:function (response) {
+  //             Swal.close();
+  //             if(response==="success") {
+  //                 Swal.fire({
+  //                     title:'success',
+  //                     text: 'You Have Successfully Done Appointment',
+  //                     type:'success',
+  //                     confirmButtonText: 'OK'
+  //                 }).then(function(result){
+  //                     if (result.value) {
+  //                         window.location.reload();
+  //                     }
+  //                 });
+  //             }
+  //             //console.log(response)
+  //         },
+  //         error:function (error) {
+  //             Swal.fire({
+  //                 title: 'Error',
+  //                 text:'Something Went Wrong',
+  //                 type:'error',
+  //                 showConfirmButton: true
+  //             });
+  //             //console.log(error);
+  //         }
+  //     })
+  //   });
 
 </script>
 @endsection

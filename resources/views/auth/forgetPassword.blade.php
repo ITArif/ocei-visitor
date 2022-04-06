@@ -47,7 +47,7 @@
         <label>{{session('status')}}</label>
       </div>
       @endif
-      <form action="{{route('send.reset.link')}}" method="post">
+      <form action="{{ route('forget.password.post') }}" method="post">
         @csrf
         <div class="input-group mb-3">
           <input type="email" name="email" class="form-control" placeholder="email">

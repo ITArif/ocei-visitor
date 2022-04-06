@@ -195,7 +195,7 @@
         var allowedExtensions = 
                 /(\.jpg|\.jpeg|\.png|\.gif)$/i;   
         if (!allowedExtensions.exec(filePath)) {
-            alert('Opps! Invalid file type, Only jpg,png,jpeg image file accept');
+            alert('Opps! Invalid file type, Only jpg,png,jpeg image file accepted');
             fileInput.value = '';
             return false;
         }   

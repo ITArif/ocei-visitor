@@ -1,8 +1,8 @@
 @extends('backend.master')
 
-@section('title', 'All Archived Appointment History')
-@section('dashboard-title', 'All Archived Appointment History')
-@section('breadcrumb-title', 'All Archived Appointment  History')
+@section('title', 'All Archived Walk In Appointment History')
+@section('dashboard-title', 'All Archived Walk In Appointment History')
+@section('breadcrumb-title', 'All Archived Walk In Appointment  History')
 
 @section('stylesheet')
     <!-- <link href="//cdn.datatables.net/1.10.19/css/jquery.dataTables.min.css" rel="stylesheet">
@@ -16,7 +16,7 @@
         <div class="col-md-12">
           <div class="card card-outline card-info">
             <div class="card-header">
-              <h3 class="card-title">All Archived Appointments</h3>
+              <h3 class="card-title">All Archived Walk In Appointments</h3>
               <!-- <button class="btn btn-danger btn-sm float-sm-left" id="delete_all" style="margin:5px;"><i class="fa fa-trash"></i> Delete</button>&nbsp -->
             <!--  <button class="btn btn-success btn-sm float-sm-left" id="done_all" style="margin:5px;"><i class="fa fa-check"></i> Done?</button>&nbsp
              <button class="btn btn-warning btn-sm float-sm-left" id="pending_all" style="margin:5px;"><i class="fa fa-exclamation-circle"></i> Pending?</button> -->
@@ -29,9 +29,10 @@
                       <th>SL No</th>
                      <!--  <th>Id Card Number</th> -->
                       <th>Visitor Name & Phone</th>
-                      <th>Approval Of</th>
+                      <th>ID Number</th>
                       <th>Purpose</th>
-                      <!-- <th>Request Details</th> -->
+                      <th>Employee Name</th>
+                      <th>Branch Name</th>
                       <th>Appointment Date & Time</th>
                       <th>Start Date & Time</th>
                       <th>End Date & Time</th>
@@ -40,23 +41,23 @@
                   </thead>
                   <tbody>
                     <?php $i=1; ?>
-                   @foreach($archiveAppointments as $archiveAppointment)
+                   @foreach($archiveWalkInAppointments as $archiveWalkInAppointment)
                     <tr>
                     <td>{{$i++}}</td>
-                    <!-- <td>{{$archiveAppointment->id_card_number}}</td> -->
-                    <td><img style="border-radius: 50%;display: inline;width: 3.5rem;" class="table-avatar" src="{{asset('profile/images/'.$archiveAppointment->visitor_image)}}" alt="Avatar"><br/>{{$archiveAppointment->visitorName}} <br>{{$archiveAppointment->visitorPhn}}</td>
-                    <td>{{$archiveAppointment->firstName}} {{$archiveAppointment->lName}}</td>
-                    <td>{{$archiveAppointment->purpose}}</td>
-                   <!--  <td>{{$archiveAppointment->request_detail}}</td> -->
-                    <td>{{ date('j F Y g:i A', strtotime($archiveAppointment->date_time)) }}</td>
-                    <td>{{ date('j F Y g:i A', strtotime($archiveAppointment->created_at)) }}</td>
-                    @if ($archiveAppointment->status==0)
+                    <td>{{$archiveWalkInAppointment->name}} <br>{{$archiveWalkInAppointment->contact_no}}</td>
+                    <td>{{$archiveWalkInAppointment->id_card_number}}</td>
+                    <td>{{$archiveWalkInAppointment->purpose}}</td>
+                    <td>{{$archiveWalkInAppointment->firstName}} {{$archiveWalkInAppointment->lName}}</td>
+                    <td>{{$archiveWalkInAppointment->branchName}}</td>
+                    <td>{{ date('j F Y g:i A', strtotime($archiveWalkInAppointment->date_time)) }}</td>
+                    <td>{{ date('j F Y g:i A', strtotime($archiveWalkInAppointment->created_at)) }}</td>
+                    @if ($archiveWalkInAppointment->status==0)
                     <td></td>
                     @else
-                    <td>{{ date('j F Y g:i A', strtotime($archiveAppointment->updated_at)) }}</td>
+                    <td>{{ date('j F Y g:i A', strtotime($archiveWalkInAppointment->updated_at)) }}</td>
                     @endif
 
-                      @if ($archiveAppointment->status==1)
+                      @if ($archiveWalkInAppointment->status==1)
                         <td>
                             <button class="btn btn-sm btn-success btn-xs">Done</button>
                         </td>

@@ -53,7 +53,7 @@
           </a>
         </div>
         <p class="mb-1">
-          <a href="{{route('forgotPassword')}}">I forgot my password</a>
+          <a href="{{route('forget.password.get')}}">I forgot my password</a>
         </p>
       </form>
     </div>

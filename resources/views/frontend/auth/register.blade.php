@@ -87,7 +87,7 @@
                                                 <div class="form-group">
                                                     <label>Phone Number<span id="mark">&nbsp;*</span></label>
                                                     <input type="text" class="form-control" name="phone"
-                                                        value="{{ old('phone') }}" placeholder="Phone">
+                                                        value="{{ old('phone') }}" placeholder="017123093965">
                                                     @if ($errors->has('phone'))
                                                         <span class="text-danger">{{ $errors->first('phone') }}</span>
                                                     @endif

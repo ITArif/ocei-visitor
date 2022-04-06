@@ -95,7 +95,7 @@
                     <tr>
                     <td>{{$i++}}</td>
                     <td>
-                      <img src="{{ asset('images/avatar.png') }}" style="width: 80px;height: 80px"><br>
+                      <img style="border-radius: 50%;display: inline;width: 3.5rem;" class="table-avatar" src="{{asset('profile/images/'.$checkAppointment->visitor_image)}}" alt="Avatar"><br>
                       <p style="font-size:13px;">{{$checkAppointment->visitorName}}</p>
                     </td>
                     <td>{{$checkAppointment->visitorPhone}}</td>

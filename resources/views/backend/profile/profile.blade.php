@@ -19,19 +19,29 @@
             <div class="card card-primary card-outline">
               <div class="card-body box-profile">
                 <div class="text-center">
-                  <img class="profile-user-img img-fluid img-circle" src="{{asset('images/user4-128x128.jpg')}}" alt="User profile picture">
+                  @if($allUsers->name != '')
+                   <img class="profile-user-img img-fluid img-circle" src="{{asset('profile/images/'.$allUsers->image)}}" alt="User profile picture">
+                  @else
+                   <img style="width:25px" src="{{ asset('images/avatar.png') }}" class="img-circle elevation-2" alt="User Image">
+                  @endif
                 </div>
 
-                <h3 class="profile-username text-center">{{session('user_name')}}</h3>
+                <h3 class="profile-username text-center">{{$allUsers->name}}</h3>
 
-                <p class="text-muted text-center">Visitor</p>
+                <p class="text-muted text-center">{{$allUsers->role}}</p>
 
                 <ul class="list-group list-group-unbordered mb-3">
                   <li class="list-group-item">
-                    <b>Name</b> <a class="float-right">{{session('user_name')}}</a>
+                    <b>Name</b> <a class="float-right">{{$allUsers->name}}</a>
+                  </li>
+                  <li class="list-group-item">
+                    <b>Phone</b> <a class="float-right">{{$allUsers->phone}}</a>
+                  </li>
+                  <li class="list-group-item">
+                    <b>Email</b> <a class="float-right">{{$allUsers->email}}</a>
                   </li>
                 </ul>
-                <a href="javascript:void(0)" class="btn btn-primary btn-block"><b>Update</b></a>
+               <!--  <a href="javascript:void(0)" class="btn btn-primary btn-block"><b>Update</b></a> -->
               </div>
               <!-- /.card-body -->
             </div>
@@ -76,36 +86,59 @@
                 <div class="tab-content">
                   <div class="active tab-pane" id="profile">
                     <!-- Post -->
-                    <form class="form-horizontal" action="{{route('update.profile')}}" method="post">
+                    <form class="form-horizontal" action="{{route('update.profile')}}" method="post" enctype="multipart/form-data">
                       @csrf
-                      <div class="form-group row {{$errors->has('user_name') ? 'has-error' : ''}}">
-                        <label for="inputName" class="col-sm-2 col-form-label">Name<span style="color: red;">*</span></label>
+                      <div class="form-group row">
+                        <label for="inputName" class="col-sm-2 col-form-label">Name</label>
                         <div class="col-sm-10">
-                          <input type="text" class="form-control" name="user_name" id="user_name" placeholder="Name" value="{{session('user_name')}}">
-                          @if($errors->has('user_name'))
-                          <span class="help-block text-danger">
-                            {{$errors->first('user_name')}}
-                          </span>
-                          @endif
+                          <input type="text" class="form-control" name="name" id="name" placeholder="Name" value="{{$allUsers->name}}">
+                        </div>
+                      </div>
+                      <div class="form-group row">
+                        <label for="inputName" class="col-sm-2 col-form-label">Email</label>
+                        <div class="col-sm-10">
+                          <input type="text" class="form-control" name="email" id="email" placeholder="email" value="{{$allUsers->email}}">
+                        </div>
+                      </div>
+                      <div class="form-group row">
+                        <label for="inputName" class="col-sm-2 col-form-label">Phone</label>
+                        <div class="col-sm-10">
+                          <input type="text" class="form-control" name="phone" id="phone" placeholder="phone" value="{{$allUsers->phone}}">
+                        </div>
+                      </div>
+                      <div class="row">
+                        <div class="col-sm-6">
+                          <div class="form-group">
+                            <label for="exampleInputFile">Upload Image</label>
+                            <div class="input-group">
+                              <div class="custom-file">
+                                <input type="file" class="custom-file-input" name="image" id="image">
+                                <label class="custom-file-label" for="exampleInputFile">Choose file</label>
+                              </div>
+                              <div class="input-group-append">
+                                <span class="input-group-text">Upload</span>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="first-name">Photo Preview <span class="required">*</span>
+                            </label>
+                            <div class="">
+                                <img id="photo_preview" src="{{asset('profile/images/'.$allUsers->image)}}" style="width: 150px;height: 150px">
+                            </div>
                         </div>
                       </div>
                       <div class="form-group row">
                         <div class="offset-sm-2 col-sm-10">
-                          <button type="submit" class="btn btn-success">Update Profile</button>
+                          <button type="submit" class="btn btn-success float-right">Update Profile</button>
                         </div>
                       </div>
                     </form>
-                    <!-- /.post -->
-
-                    <!-- Post -->
-                    <!-- /.post -->
                   </div>
-                  <!-- /.tab-pane -->
-                 
-                  <!-- /.tab-pane -->
 
                   <div class="tab-pane" id="password">
-                    <form action="#" method="post" class="form-horizontal">
+                    <form action="{{route('update.password')}}" method="post" class="form-horizontal">
                      @csrf
                       <div class="form-group row {{$errors->has('old_password') ? 'has-error' : ''}}">
                         <label for="inputName" class="col-sm-2 col-form-label">Old Password<span style="color: red;">*</span></label>
@@ -163,5 +196,31 @@
 
 @section('custom_script')
 
+<script>
+  function readURL(input) {
+      if (input.files && input.files[0]) {
+          var reader = new FileReader();
+          reader.onload = function(e) {
+              $('#photo_preview').attr('src', e.target.result);
+          }
+          reader.readAsDataURL(input.files[0]);
+      }
+    }
+  $("#image").change(function() {
+      readURL(this);
+  });
 
+  $("input[type=file]").change(function () {
+      var fieldVal = $(this).val();
+
+      // Change the node's value by removing the fake path (Chrome)
+      fieldVal = fieldVal.replace("C:\\fakepath\\", "");
+
+      if (fieldVal != undefined || fieldVal != "") {
+          $(this).next(".custom-file-label").attr('data-content', fieldVal);
+          $(this).next(".custom-file-label").text(fieldVal);
+      }
+  });
+
+</script>
 @endsection

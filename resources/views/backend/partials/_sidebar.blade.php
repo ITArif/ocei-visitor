@@ -54,9 +54,18 @@
                 <li class="nav-item has-treeview">
                     <a href="{{ route('official.list') }}"
                         class="nav-link {{ request()->is('official/list') ? 'active' : '' }}">
-                        <i class="nav-icon fa fa-user-secret"></i>
+                        <i class="nav-icon fa fa-user-secret text-green"></i>
                         <p>
                             Create Appointment
+                        </p>
+                    </a>
+                </li>
+                <li class="nav-item has-treeview">
+                    <a href="{{ url('user/profile') }}"
+                        class="nav-link {{ request()->is('user/profile') ? 'active' : '' }}">
+                        <i class="nav-icon fas fa-user text-orange pull-right"></i>
+                        <p>
+                            My Profile
                         </p>
                     </a>
                 </li>

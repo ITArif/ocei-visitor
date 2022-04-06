@@ -8,6 +8,8 @@ use App\User;
 use App\Appointment;
 use App\Receptionist;
 use App\VisitorRegistration;
+use App\Employee;
+use App\Branch;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Session;
@@ -40,7 +42,9 @@ class HomeController extends Controller
         $totalVisitor=VisitorRegistration::all()->count();
         $ongoingAppointments=Receptionist::where('status',5)->count();
         $totalArchievedAppointment=Receptionist::where('status',1)->count();
-        return view('backend.dashboard.receptionist_dashboard')->with(compact('totalPendingAppointment','totalVisitor','ongoingAppointments','totalArchievedAppointment'));
+        $employees=Employee::all();
+        $branchs=Branch::all();
+        return view('backend.dashboard.receptionist_dashboard')->with(compact('totalPendingAppointment','totalVisitor','ongoingAppointments','totalArchievedAppointment','employees','branchs'));
     }
 
     public function profile(){
