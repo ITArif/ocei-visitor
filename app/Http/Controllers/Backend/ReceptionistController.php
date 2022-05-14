@@ -234,74 +234,76 @@ class ReceptionistController extends Controller
 
     public function appointmentReports(Request $request){
       $branchs=Branch::all();
-      $appointmentData = DB::table('receptionist_appointment')
-            ->leftJoin('appointment', 'receptionist_appointment.appointment_id', '=', 'appointment.id')
-            ->leftJoin('employee', 'receptionist_appointment.employee_id', '=', 'employee.employee_id')
-            ->leftJoin('visitor_registration', 'receptionist_appointment.visitor_id', '=', 'visitor_registration.id')
-            ->select('receptionist_appointment.*', 'employee.first_name as firstName','employee.last_name as lName', 'visitor_registration.name as visitorName','visitor_registration.phone as phnNumber','visitor_registration.image as visitor_image')
-            ->where('receptionist_appointment.status','=',1)
-            ->get();
+      return view('backend.reports.appointment_reports',compact('branchs'));
+    }
 
-      if ($request->isMethod('post')) {
-            $from_date = date('Y-m-d 00:00:01', strtotime($request->from_date));
-            $to_date = date('Y-m-d 23:59:59', strtotime($request->to_date));
+    public function employeeWisePrintReport(Request $request){
+        if ($request->isMethod('get')) {
+            //$from_date = date('Y-m-d 00:00:01', strtotime($request->from_date));
+            //$to_date = date('Y-m-d 23:59:59', strtotime($request->to_date));
+
+            $from_dat = $from_date = date('Y-m-d 00:00:01', strtotime($request->from_date));
+            $to_dat = $to_date = date('Y-m-d 23:59:59', strtotime($request->to_date));
+
             $branch = $request->branch_id;
-            if ($branch || ($from_date || $to_date)) {
+            if ($branch and ($from_date and $to_date)) {
                  //dd($to_date);
-                $appointmentData = DB::table('receptionist_appointment')
-                    ->leftJoin('appointment', 'receptionist_appointment.appointment_id', '=', 'appointment.id')
-                    ->leftJoin('employee', 'receptionist_appointment.employee_id', '=', 'employee.employee_id')
-                    ->leftJoin('visitor_registration', 'receptionist_appointment.visitor_id', '=', 'visitor_registration.id')
-                    ->select('receptionist_appointment.*', 'employee.employee_id as employee_id', 'employee.first_name as firstName', 'employee.last_name as lName', 'visitor_registration.name as visitorName','visitor_registration.phone as phnNumber','visitor_registration.image as visitor_image')
-                    ->where('receptionist_appointment.status','=',1);
-                    if ($branch=='all') {
-                        $appointmentData=$appointmentData->orWhereBetween('receptionist_appointment.date_time', [$from_date, $to_date])->get();
+                   $appointmentDataBranch=null;
+                   $appointmentDataEmployee=null;
+                    if ($branch=='branch_wise') {
+                        $appointmentDataBranch = DB::select("SELECT `branch`.`branch_name` AS branchName, COUNT(receptionist_appointment.id) as total FROM `receptionist_appointment` 
+                        LEFT JOIN `branch` ON `branch`.`branch_id` = `receptionist_appointment`.`branch_id` 
+                        WHERE (`receptionist_appointment`.`date_time` BETWEEN '".$from_date."' AND '".$to_date."') AND (`receptionist_appointment`.`status` = 1)
+                        GROUP BY receptionist_appointment.branch_id");
                     }else{
-                        $appointmentData = $appointmentData->where('receptionist_appointment.branch_id',$branch)
-                                                        ->orWhereBetween('receptionist_appointment.date_time', [$from_date, $to_date])->get();
+                        $appointmentDataEmployee = DB::select("SELECT `employee`.`first_name` AS firstName, `employee`.`last_name` AS lastName, COUNT(receptionist_appointment.id) as total FROM `receptionist_appointment` 
+                        LEFT JOIN `employee` ON `employee`.`employee_id` = `receptionist_appointment`.`employee_id` 
+                        WHERE (`receptionist_appointment`.`date_time` BETWEEN '".$from_date."' AND '".$to_date."') AND (`receptionist_appointment`.`status` = 1)
+                        GROUP BY receptionist_appointment.employee_id");
                     }
                  //dd($appointmentData);
-                return view('backend.reports.appointment_reports',compact('appointmentData','branchs'));
+                return view('backend.reports.print_employee_wise_report',['appointmentDataBranch'=> $appointmentDataBranch,'appointmentDataEmployee'=>$appointmentDataEmployee,'from_dat'=>$from_dat,'to_dat'=>$to_dat]);
             }
         }
-      return view('backend.reports.appointment_reports',compact('appointmentData','branchs'));
+        //return view('backend.reports.print_employee_wise_report',$appointmentData);
     }
 
 
     public function walkInAppointmentReports(Request $request){
       $branchs=Branch::all();
-      $appointmentData = DB::table('walk_appointment')
-            ->leftJoin('employee', 'walk_appointment.employee_id', '=', 'employee.employee_id')
-            ->leftJoin('branch', 'walk_appointment.branch_id', '=', 'branch.branch_id')
-            ->select('walk_appointment.*', 'employee.first_name as firstName','employee.last_name as lName', 'branch.branch_name as branchName')
-            ->where('walk_appointment.status','=',1)
-            ->get();
+      return view('backend.reports.walkin_appointment_reports',compact('branchs'));
+    }
 
-      if ($request->isMethod('post')) {
-            $from_date = date('Y-m-d 00:00:01', strtotime($request->from_date));
-            $to_date = date('Y-m-d 23:59:59', strtotime($request->to_date));
+
+    public function walkAppointmentPrintReport(Request $request){
+        if ($request->isMethod('get')) {
+            //$from_date = date('Y-m-d 00:00:01', strtotime($request->from_date));
+            //$to_date = date('Y-m-d 23:59:59', strtotime($request->to_date));
+
+            $from_dat = $from_date = date('Y-m-d 00:00:01', strtotime($request->from_date));
+            $to_dat = $to_date = date('Y-m-d 23:59:59', strtotime($request->to_date));
+
             $branch = $request->branch_id;
-            if ($branch || ($from_date && $to_date)) {
-                 //dd($branch);
-                $appointmentData = DB::table('walk_appointment')
-                    ->leftJoin('employee', 'walk_appointment.employee_id', '=', 'employee.employee_id')
-                    ->leftJoin('branch', 'walk_appointment.branch_id', '=', 'branch.branch_id')
-                    ->select('walk_appointment.*', 'employee.employee_id as employee_id', 'employee.first_name as firstName', 'employee.last_name as lName', 'branch.branch_name as branchName')
-                    ->where('walk_appointment.status','=',1);
-                if($branch == 'all') {
-                    $appointmentData = $appointmentData->orWhereBetween('walk_appointment.date_time', [$from_date, $to_date])->get();
-                    //dd($appointmentData);
-                }else{
-                    $appointmentData = $appointmentData->where('walk_appointment.branch_id',$branch)
-                                                        ->orWhereBetween('walk_appointment.date_time', [$from_date, $to_date])
-                                                        ->get();
-                    //dd($appointmentData);
-                }
-
+            if ($branch and ($from_date and $to_date)) {
+                 //dd($to_date);
+                   $appointmentDataBranch=null;
+                   $appointmentDataEmployee=null;
+                    if ($branch=='branch_wise') {
+                        $appointmentDataBranch = DB::select("SELECT `branch`.`branch_name` AS branchName, COUNT(walk_appointment.id) as total FROM `walk_appointment` 
+                        LEFT JOIN `branch` ON `branch`.`branch_id` = `walk_appointment`.`branch_id` 
+                        WHERE (`walk_appointment`.`date_time` BETWEEN '".$from_date."' AND '".$to_date."') AND (`walk_appointment`.`status` = 1)
+                        GROUP BY walk_appointment.branch_id");
+                    }else{
+                        $appointmentDataEmployee = DB::select("SELECT `employee`.`first_name` AS firstName, `employee`.`last_name` AS lastName, COUNT(walk_appointment.id) as total FROM `walk_appointment` 
+                        LEFT JOIN `employee` ON `employee`.`employee_id` = `walk_appointment`.`employee_id` 
+                        WHERE (`walk_appointment`.`date_time` BETWEEN '".$from_date."' AND '".$to_date."') AND (`walk_appointment`.`status` = 1)
+                        GROUP BY walk_appointment.employee_id");
+                    }
                  //dd($appointmentData);
-                return view('backend.reports.walkin_appointment_reports',compact('appointmentData','branchs'));
+                return view('backend.reports.print_walkappointment_report',['appointmentDataBranch'=> $appointmentDataBranch,'appointmentDataEmployee'=>$appointmentDataEmployee,'from_dat'=>$from_dat,'to_dat'=>$to_dat]);
             }
         }
-      return view('backend.reports.walkin_appointment_reports',compact('appointmentData','branchs'));
+        //return view('backend.reports.print_walkappointment_report',['appointmentDataBranch'=> $appointmentDataBranch,'appointmentDataEmployee'=>$appointmentDataEmployee,'from_dat'=>$from_dat,'to_dat'=>$to_dat]);
     }
+
 }

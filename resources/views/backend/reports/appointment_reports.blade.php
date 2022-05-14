@@ -21,7 +21,7 @@
             </div>
             <!-- /.card-header -->
             <div class="card-body">
-              <form action="{{route('appointmentReports')}}" method="post">
+              <form action="{{route('employeeWisePrintReport')}}" method="get">
                 @csrf
                 <div class="col-md-12">
                     <div class="row">
@@ -41,11 +41,12 @@
                           <div class="form-group">
                             <label for="exampleInputFile">Branch</label>
                             <select class="form-control select2bs4" name="branch_id" id="branch_id" style="width: 100%;">
-                                <option value="">----Select Branch----</option>
-                                <option value="all">All</option>
-                                @foreach($branchs as $branch)
+                                <option value="">----Select Types----</option>
+                                <option value="branch_wise">Branch Wise</option>
+                                <option value="employee_wise">Employee Wise</option>
+                                <!-- @foreach($branchs as $branch)
                                 <option value="{{$branch->branch_id}}">{{$branch->branch_name}}</option>
-                                @endforeach
+                                @endforeach -->
                             </select>
                           </div>
                         </div>
@@ -62,48 +63,6 @@
           </div>
           </div>
         </div>
-      <!-- ./row -->
-      <div class="row">
-        <div class="col-md-12">
-          <div class="card card-outline card-info">
-            <div class="card-header">
-              <h3 class="card-title">
-                Appointment Reports
-              </h3>
-            </div>
-            <!-- /.card-header -->
-            <div class="card-body">
-              <table id="all-reports" class="table table-bordered table-striped">
-                <thead>
-                    <tr class="bg-success ">
-                      <th style="width:5%!important;">SL</th>
-                      <th>Name</th>
-                      <th>Office</th>
-                      <th>Purpose</th>
-                      <th>Details</th>
-                      <th>Appointment Date</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    <?php $i=1; ?>
-                    @foreach($appointmentData as $aptmentData)
-                      <tr>
-                        <td>{{$i++}}</td>
-                        <td><img style="border-radius: 50%;display: inline;width: 3.5rem;" class="table-avatar" src="{{asset('profile/images/'.$aptmentData->visitor_image)}}" alt="Avatar"><br/>{{$aptmentData->visitorName}}<br>{{$aptmentData->phnNumber}}</td>
-                        <td>{{$aptmentData->firstName}} {{$aptmentData->lName}}</td>
-                        <td>{{$aptmentData->purpose}}</td>
-                        <td>{{$aptmentData->request_detail}}</td>
-                        <td>{{ date('j F Y g:i A', strtotime($aptmentData->date_time)) }}</td>
-                     </tr>
-                   @endforeach
-               </tbody>
-              </table>
-            </div>
-          </div>
-        </div>
-        <!-- /.col-->
-      </div>
-      <!-- ./row -->
     </section>
 @endsection
 

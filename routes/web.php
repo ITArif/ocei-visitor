@@ -66,8 +66,12 @@ Route::middleware('receptionist')->group(function(){
     Route::post('/walkin/appointment/pending',[ReceptionistController::class, 'pendingWalkInAppointment']);
     Route::get('/archive/walkin/appointment', [ReceptionistController::class, 'archiveWalkInAppointmentData'])->name('archiveWalkInAppointmentData');
     /////////************Reports******************///////
-    Route::match(['get','post'],'/reports/appointment', [ReceptionistController::class,'appointmentReports'])->name('appointmentReports');
-    Route::match(['get','post'],'/reports/walkin/appointment', [ReceptionistController::class,'walkInAppointmentReports'])->name('walkInAppointmentReports');
+    Route::get('/reports/appointment', [ReceptionistController::class,'appointmentReports'])->name('appointmentReports');
+    Route::get('/employee/wise/print_report',[ReceptionistController::class, 'employeeWisePrintReport'])->name('employeeWisePrintReport');
+
+    /////////************Reports walkAppointment******************///////
+    Route::get('/reports/walkin/appointment', [ReceptionistController::class,'walkInAppointmentReports'])->name('walkInAppointmentReports');
+    Route::get('/walkin-appointment/print_report',[ReceptionistController::class, 'walkAppointmentPrintReport'])->name('walkAppointmentPrintReport');
 
     Route::group(['prefix' => 'receptionists'], function () {
       Route::match(['get','post'],'/appointment/list', [ReceptionistController::class,'checkAppointmentList'])->name('checkAppointmentList');
